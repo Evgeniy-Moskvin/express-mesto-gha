@@ -9,4 +9,8 @@ router.get('/', (req, res) => {
 router.use(userRouter);
 router.use(cardRouter);
 
+router.all('*', (req, res) => {
+  res.status(404).send({ message: 'Ресурс не найден или был удален' });
+});
+
 module.exports = router;
