@@ -24,15 +24,14 @@ const getUserById = ((req, res) => {
 });
 
 const createUser = ((req, res) => {
-  console.log(req.query);
   User.create({...req.body})
     .then((user) => {
       res.status(201).send(user);
     })
     .catch((err) => {
-      /*if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError') {
         return res.status(400).send({ message: 'Некорректные данные'});
-      }*/
+      }
       res.status(500).send({ message: `Ошибка ${err.message}` });
     });
 });
