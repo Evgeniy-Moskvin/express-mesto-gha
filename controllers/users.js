@@ -20,6 +20,10 @@ const getUserById = ((req, res) => {
       res.status(200).send(user);
     })
     .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: `Некорректный id` });
+        return;
+      }
       res.status(500).send({ message: `Ошибка ${err.message}` });
     });
 });
@@ -40,7 +44,7 @@ const createUser = ((req, res) => {
 
 const updateUser = ((req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         res.status(404).send({ message: `Пользователь с id ${req.user._id} не найден` });
