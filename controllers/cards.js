@@ -31,6 +31,10 @@ const deleteCard = ((req, res) => {
       res.status(200).send(card);
     })
     .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: `Некорректный id` });
+        return;
+      }
       res.status(500).send({ message: `Ошибка ${err.message}` });
     });
 });
@@ -45,6 +49,10 @@ const addLike = ((req, res) => {
       res.status(200).send(card);
     })
     .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: `Некорректный id` });
+        return;
+      }
       res.status(500).send({ message: `Ошибка ${err.message}` });
     });
 });
@@ -59,6 +67,10 @@ const deleteLike = ((req, res) => {
       res.status(200).send(card);
     })
     .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: `Некорректный id` });
+        return;
+      }
       res.status(500).send({ message: `Ошибка ${err.message}` });
     });
 });
