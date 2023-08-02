@@ -8,13 +8,14 @@ const getCards = ((req, res) => {
 });
 
 const createCard = ((req, res) => {
-  Card.create({...req.body, owner: req.user._id})
+  Card.create({ ...req.body, owner: req.user._id })
     .then((card) => {
       res.status(201).send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Некорректные данные'});
+        res.status(400).send({ message: 'Некорректные данные' });
+        return;
       }
       res.status(500).send({ message: `Ошибка ${err.message}` });
     });
@@ -24,7 +25,8 @@ const deleteCard = ((req, res) => {
   Card.findByIdAndDelete(req.params.cardId)
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: `Карточка с id ${req.params.cardId} не найдена`});
+        res.status(404).send({ message: `Карточка с id ${req.params.cardId} не найдена` });
+        return;
       }
       res.status(200).send(card);
     })
@@ -34,10 +36,11 @@ const deleteCard = ((req, res) => {
 });
 
 const addLike = ((req, res) => {
-  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, {new: true})
+  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: `Карточка с id ${req.params.cardId} не найдена`});
+        res.status(404).send({ message: `Карточка с id ${req.params.cardId} не найдена` });
+        return;
       }
       res.status(200).send(card);
     })
@@ -47,10 +50,11 @@ const addLike = ((req, res) => {
 });
 
 const deleteLike = ((req, res) => {
-  Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, {new: true})
+  Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: `Карточка с id ${req.params.cardId} не найдена`});
+        res.status(404).send({ message: `Карточка с id ${req.params.cardId} не найдена` });
+        return;
       }
       res.status(200).send(card);
     })
@@ -65,4 +69,4 @@ module.exports = {
   deleteCard,
   addLike,
   deleteLike,
-}
+};
