@@ -1,11 +1,12 @@
 const Card = require('../models/card');
 const BadRequest = require('../errors/BadRequest');
 const NotFound = require('../errors/NotFound');
+const { CODE_SUCCESS_REQUEST, CODE_SUCCESS_CREATE } = require('../utils/codeStatus');
 
 const getCards = ((req, res, next) => {
   Card.find({})
     .then((cards) => {
-      res.status(200).send(cards);
+      res.status(CODE_SUCCESS_REQUEST).send(cards);
     })
     .catch(next);
 });
@@ -13,7 +14,7 @@ const getCards = ((req, res, next) => {
 const createCard = ((req, res, next) => {
   Card.create({ ...req.body, owner: req.user._id })
     .then((card) => {
-      res.status(201).send(card);
+      res.status(CODE_SUCCESS_CREATE).send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -30,7 +31,7 @@ const deleteCard = ((req, res, next) => {
       if (!card) {
         throw new NotFound(`Карточка с id ${req.params.cardId} не найдена`);
       }
-      res.status(200).send(card);
+      res.status(CODE_SUCCESS_REQUEST).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -47,7 +48,7 @@ const addLike = ((req, res, next) => {
       if (!card) {
         throw new NotFound(`Карточка с id ${req.params.cardId} не найдена`);
       }
-      res.status(200).send(card);
+      res.status(CODE_SUCCESS_REQUEST).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -64,7 +65,7 @@ const deleteLike = ((req, res, next) => {
       if (!card) {
         throw new NotFound(`Карточка с id ${req.params.cardId} не найдена`);
       }
-      res.status(200).send(card);
+      res.status(CODE_SUCCESS_REQUEST).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
