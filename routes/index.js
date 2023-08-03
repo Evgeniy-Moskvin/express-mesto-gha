@@ -6,8 +6,8 @@ router.get('/', (req, res) => {
   res.send('Главная страница');
 });
 
-router.use(userRouter);
-router.use(cardRouter);
+router.use('/users', userRouter);
+router.use('/cards', cardRouter);
 
 router.all('*', (req, res) => {
   res.status(404).send({ message: 'Ресурс не найден или был удален' });

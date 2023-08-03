@@ -1,82 +1,79 @@
 const User = require('../models/user');
+const NotFound = require('../errors/NotFound');
+const BadRequest = require('../errors/BadRequest');
 
-const getUsers = ((req, res) => {
+const getUsers = ((req, res, next) => {
   User.find({})
     .then((users) => {
       res.status(200).send(users);
     })
-    .catch((err) => {
-      res.status(500).send({ message: `Ошибка ${err.message}` });
-    });
+    .catch(next);
 });
 
-const getUserById = ((req, res) => {
+const getUserById = ((req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        res.status(404).send({ message: `Пользователь с id ${req.params.userId} не найден` });
-        return;
+        throw new NotFound(`Пользователь с id ${req.params.userId} не найден`);
       }
       res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректный id' });
+        next(new BadRequest('Некорректный id'));
         return;
       }
-      res.status(500).send({ message: `Ошибка ${err.message}` });
+      next(err);
     });
 });
 
-const createUser = ((req, res) => {
+const createUser = ((req, res, next) => {
   User.create({ ...req.body })
     .then((user) => {
       res.status(201).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Некорректные данные' });
+        next(new BadRequest('Некорректные данные'));
         return;
       }
-      res.status(500).send({ message: `Ошибка ${err.message}` });
+      next(err);
     });
 });
 
-const updateUser = ((req, res) => {
+const updateUser = ((req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        res.status(404).send({ message: `Пользователь с id ${req.user._id} не найден` });
-        return;
+        throw new NotFound(`Пользователь с id ${req.params.userId} не найден`);
       }
       res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Некорректные данные' });
+        next(new BadRequest('Некорректные данные'));
         return;
       }
-      res.status(500).send({ message: `Ошибка ${err.message}` });
+      next(err);
     });
 });
 
-const updateUserAvatar = ((req, res) => {
+const updateUserAvatar = ((req, res, next) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        res.status(404).send({ message: `Пользователь с id ${req.user._id} не найден` });
-        return;
+        throw new NotFound(`Пользователь с id ${req.params.userId} не найден`);
       }
       res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Некорректные данные' });
+        next(new BadRequest('Некорректные данные'));
         return;
       }
-      res.status(500).send({ message: `Ошибка ${err.message}` });
+      next(err);
     });
 });
 
