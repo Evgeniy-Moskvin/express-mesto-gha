@@ -1,12 +1,12 @@
 const User = require('../models/user');
 const NotFound = require('../errors/NotFound');
 const BadRequest = require('../errors/BadRequest');
-const { CODE_SUCCESS_REQUEST, CODE_SUCCESS_CREATE } = require('../utils/codeStatus');
+const { STATUS_CODE_OK, STATUS_CODE_CREATED } = require('../utils/httpStatusCodes');
 
 const getUsers = ((req, res, next) => {
   User.find({})
     .then((users) => {
-      res.status(CODE_SUCCESS_REQUEST).send(users);
+      res.status(STATUS_CODE_OK).send(users);
     })
     .catch(next);
 });
@@ -17,7 +17,7 @@ const getUserById = ((req, res, next) => {
       if (!user) {
         throw new NotFound(`Пользователь с id ${req.params.userId} не найден`);
       }
-      res.status(CODE_SUCCESS_REQUEST).send(user);
+      res.status(STATUS_CODE_OK).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -31,7 +31,7 @@ const getUserById = ((req, res, next) => {
 const createUser = ((req, res, next) => {
   User.create({ ...req.body })
     .then((user) => {
-      res.status(CODE_SUCCESS_CREATE).send(user);
+      res.status(STATUS_CODE_CREATED).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -49,7 +49,7 @@ const updateUser = ((req, res, next) => {
       if (!user) {
         throw new NotFound(`Пользователь с id ${req.params.userId} не найден`);
       }
-      res.status(CODE_SUCCESS_REQUEST).send(user);
+      res.status(STATUS_CODE_OK).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -67,7 +67,7 @@ const updateUserAvatar = ((req, res, next) => {
       if (!user) {
         throw new NotFound(`Пользователь с id ${req.params.userId} не найден`);
       }
-      res.status(CODE_SUCCESS_REQUEST).send(user);
+      res.status(STATUS_CODE_OK).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {

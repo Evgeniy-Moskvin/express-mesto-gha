@@ -1,7 +1,0 @@
-const CODE_SUCCESS_REQUEST = 200;
-const CODE_SUCCESS_CREATE = 201;
-
-module.exports = {
-  CODE_SUCCESS_REQUEST,
-  CODE_SUCCESS_CREATE,
-};
