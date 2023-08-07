@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const NotFound = require('../errors/NotFound');
 const BadRequest = require('../errors/BadRequest');
-const UnAuthorized = require('../errors/UnAuthorized');
+const { createToken } = require('../utils/jwt');
 const { STATUS_CODE_OK, STATUS_CODE_CREATED } = require('../utils/httpStatusCodes');
 
 const getUsers = ((req, res, next) => {
@@ -39,7 +39,7 @@ const createUser = ((req, res, next) => {
         about: req.body.about,
         avatar: req.body.avatar,
         email: req.body.email,
-        password: hash
+        password: hash,
       })
         .then((user) => {
           const { password, ...userData } = user._doc;
@@ -51,7 +51,7 @@ const createUser = ((req, res, next) => {
             return;
           }
           next(err);
-        })
+        });
     })
     .catch((err) => {
       next(err);
@@ -97,20 +97,14 @@ const updateUserAvatar = ((req, res, next) => {
 const login = ((req, res, next) => {
   const { email, password } = req.body;
 
-  User.findOne({ email })
+  return User.findUserByCredentials(email, password)
     .then((user) => {
-      if (!user) {
-        throw new UnAuthorized('Неправильные почта или пароль');
-      }
+      const token = createToken(user);
 
-      return bcrypt.compare(password, user.password);
-    })
-    .then((matched) => {
-      if (!matched) {
-        throw new UnAuthorized('Неправильные почта или пароль');
-      }
-
-
+      res.cookie('jwt', token, {
+        maxAge: 3600 * 24 * 7,
+        httpOnly: true,
+      });
     })
     .catch((err) => {
       next(err);
