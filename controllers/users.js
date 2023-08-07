@@ -31,22 +31,28 @@ const getUserById = ((req, res, next) => {
 });
 
 const createUser = ((req, res, next) => {
-  bcrypt.hash(req.password, 10)
-    .then(hash => User.create({
-      name: req.name,
-      about: req.about,
-      avatar: req.avatar,
-      email: req.email,
-      password: hash,
-    }))
-    .then((user) => {
-      res.status(STATUS_CODE_CREATED).send(user);
+  bcrypt.hash(req.body.password, 10)
+    .then((hash) => {
+      User.create({
+        name: req.body.name,
+        about: req.body.about,
+        avatar: req.body.avatar,
+        email: req.body.email,
+        password: hash
+      })
+        .then((user) => {
+          const { email } = user;
+          res.status(STATUS_CODE_CREATED).send({email: email});
+        })
+        .catch((err) => {
+          if (err.name === 'ValidationError') {
+            next(new BadRequest('Некорректные данные'));
+            return;
+          }
+          next(err);
+        })
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequest('Некорректные данные'));
-        return;
-      }
       next(err);
     });
 });
@@ -87,10 +93,32 @@ const updateUserAvatar = ((req, res, next) => {
     });
 });
 
+const login = ((req, res, next) => {
+  const { email, password } = req.body;
+
+  /*User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+
+      return bcrypt.compare(password, user.password);
+    })
+    .then((matched) => {
+      if (!matched) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+    })
+    .catch((err) => {
+      next(err);
+    });*/
+});
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
   updateUser,
   updateUserAvatar,
+  login,
 };
