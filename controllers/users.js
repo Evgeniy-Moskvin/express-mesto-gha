@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const NotFound = require('../errors/NotFound');
 const BadRequest = require('../errors/BadRequest');
+const UnAuthorized = require('../errors/UnAuthorized');
 const { STATUS_CODE_OK, STATUS_CODE_CREATED } = require('../utils/httpStatusCodes');
 
 const getUsers = ((req, res, next) => {
@@ -41,8 +42,8 @@ const createUser = ((req, res, next) => {
         password: hash
       })
         .then((user) => {
-          const { email } = user;
-          res.status(STATUS_CODE_CREATED).send({email: email});
+          const { password, ...userData } = user._doc;
+          res.status(STATUS_CODE_CREATED).send(userData);
         })
         .catch((err) => {
           if (err.name === 'ValidationError') {
@@ -96,22 +97,24 @@ const updateUserAvatar = ((req, res, next) => {
 const login = ((req, res, next) => {
   const { email, password } = req.body;
 
-  /*User.findOne({ email })
+  User.findOne({ email })
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
+        throw new UnAuthorized('Неправильные почта или пароль');
       }
 
       return bcrypt.compare(password, user.password);
     })
     .then((matched) => {
       if (!matched) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
+        throw new UnAuthorized('Неправильные почта или пароль');
       }
+
+
     })
     .catch((err) => {
       next(err);
-    });*/
+    });
 });
 
 module.exports = {
