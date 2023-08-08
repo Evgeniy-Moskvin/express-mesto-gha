@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
+const cookieParser = require('cookie-parser');
 const routes = require('./routes');
 
 const { serverError } = require('./middlewares/serverError');
@@ -18,6 +19,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
     console.error('Ошибка подключения к БД!');
   });
 
+app.use(cookieParser());
 app.use(express.json());
 
 app.use(routes);

@@ -31,7 +31,7 @@ router.post('/signup', celebrate({
   }),
 }), createUser);
 
-router.patch('/me', auth, celebrate({
+router.patch('/users/me', auth, celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     about: Joi.string().required().min(2).max(30),
@@ -51,6 +51,6 @@ router.post('/signin', celebrate({
   }),
 }), login);
 
-router.get('/me', auth, getUser);
+router.get('/users/me', auth, getUser);
 
 module.exports = router;

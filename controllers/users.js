@@ -8,6 +8,8 @@ const { createToken } = require('../utils/jwt');
 const { STATUS_CODE_OK, STATUS_CODE_CREATED } = require('../utils/httpStatusCodes');
 
 const getUsers = ((req, res, next) => {
+  console.log('getUsers');
+
   User.find({})
     .then((users) => {
       res.status(STATUS_CODE_OK).send(users);
@@ -108,14 +110,12 @@ const login = ((req, res, next) => {
     .then((user) => {
       const token = createToken(user);
 
-      res.cookie('jwt', token, {
+      return res.cookie('jwt', token, {
         maxAge: 3600 * 24 * 7,
         httpOnly: true,
-      });
+      }).send({ message: 'success' });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 });
 
 const getUser = ((req, res, next) => {

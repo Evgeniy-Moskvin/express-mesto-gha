@@ -47,21 +47,23 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.static.findUserByCredentials = (email, password) => this.findOne({ email })
-  .select('+password')
-  .then((user) => {
-    if (!user) {
-      throw new UnAuthorized('Неправильные почта или пароль');
-    }
+userSchema.static.findUserByCredentials = function (email, password) {
+  return this.findOne({ email })
+    .select('+password')
+    .then((user) => {
+      if (!user) {
+        throw new UnAuthorized('Неправильные почта или пароль');
+      }
 
-    return bcrypt.compare(password, user.password)
-      .then((matched) => {
-        if (!matched) {
-          throw new UnAuthorized('Неправильные почта или пароль');
-        }
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) {
+            throw new UnAuthorized('Неправильные почта или пароль');
+          }
 
-        return user;
-      });
-  });
+          return user;
+        });
+    });
+};
 
 module.exports = mongoose.model('user', userSchema);
