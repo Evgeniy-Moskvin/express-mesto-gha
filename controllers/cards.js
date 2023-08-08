@@ -36,8 +36,11 @@ const deleteCard = ((req, res, next) => {
         next(new Forbidden('Нет прав для удаления карточки'));
         return;
       }
+
       Card.findByIdAndRemove(card._id)
-      res.status(STATUS_CODE_OK).send(card);
+        .then((removeCard) => {
+          res.status(STATUS_CODE_OK).send(removeCard);
+        });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
