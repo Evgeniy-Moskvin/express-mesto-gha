@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const routes = require('./routes');
 const { errors } = require('celebrate');
+const routes = require('./routes');
 
 const { serverError } = require('./middlewares/serverError');
 

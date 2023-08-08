@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const NotFound = require('../errors/NotFound');
 const BadRequest = require('../errors/BadRequest');
-const Conflict = require('../errors/Conflict')
+const Conflict = require('../errors/Conflict');
 const { createToken } = require('../utils/jwt');
 const { STATUS_CODE_OK, STATUS_CODE_CREATED } = require('../utils/httpStatusCodes');
 
@@ -130,7 +130,7 @@ const getUser = ((req, res, next) => {
     })
     .catch((err) => {
       next(err);
-    })
+    });
 });
 
 module.exports = {

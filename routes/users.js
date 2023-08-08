@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const { auth } = require('../middlewares/auth');
 const { celebrate, Joi } = require('celebrate');
+const { auth } = require('../middlewares/auth');
 
 const {
   getUsers,
@@ -16,15 +16,16 @@ router.get('/', auth, getUsers);
 
 router.get('/:userId', auth, celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().required().min(24).max(24).pattern(/[a-z][0-9]+/), //64ca4a49727e7d6dcf4c37bc
-  })
+    userId: Joi.string().required().min(24).max(24)
+      .pattern(/[a-z][0-9]+/), // 64ca4a49727e7d6dcf4c37bc
+  }),
 }), getUserById);
 
 router.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(/(?:http|https):\/\/((?:[\w-]+)(?:\.[\w-]+)+)(?:[\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/),
+    avatar: Joi.string().pattern(/(?:http|https):[/][/]((?:[\w-]+)(?:\.[\w-]+)+)(?:[\w.,@?^=%&amp;:[/]~+#-]*[\w@?^=%&amp;[/]~+#-])?/),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
@@ -39,7 +40,7 @@ router.patch('/me', auth, celebrate({
 
 router.patch('/me/avatar', auth, celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().pattern(/(?:http|https):\/\/((?:[\w-]+)(?:\.[\w-]+)+)(?:[\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/),
+    avatar: Joi.string().required().pattern(/(?:http|https):[/][/]((?:[\w-]+)(?:\.[\w-]+)+)(?:[\w.,@?^=%&amp;:[/]~+#-]*[\w@?^=%&amp;[/]~+#-])?/),
   }),
 }), updateUserAvatar);
 
