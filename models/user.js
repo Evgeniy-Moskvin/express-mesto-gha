@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
 
     validate: {
       validator: ((v) => {
-        validator.isUrl(v);
+        validator.isURL(v);
       }),
       message: 'Некорректная ссылка',
     },
