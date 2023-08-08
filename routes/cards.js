@@ -18,21 +18,21 @@ router.post('/', auth, celebrate({
 router.delete('/:cardId', auth, celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().required().min(24).max(24)
-      .pattern(/[a-z][0-9]+/), // 64ca4a49727e7d6dcf4c37bc
+      .hex(),
   }),
 }), deleteCard);
 
 router.put('/:cardId/likes', auth, celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().required().min(24).max(24)
-      .pattern(/[a-z][0-9]+/), // 64ca4a49727e7d6dcf4c37bc
+      .hex(),
   }),
 }), addLike);
 
 router.delete('/:cardId/likes', auth, celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().required().min(24).max(24)
-      .pattern(/[a-z][0-9]+/), // 64ca4a49727e7d6dcf4c37bc
+      .hex(),
   }),
 }), deleteLike);
 

@@ -19,7 +19,7 @@ router.get('/users/me', auth, getUser);
 router.get('/users/:userId', auth, celebrate({
   params: Joi.object().keys({
     userId: Joi.string().required().min(24).max(24)
-      .pattern(/[a-z][0-9]+/), // 64ca4a49727e7d6dcf4c37bc
+      .hex(),
   }),
 }), getUserById);
 
