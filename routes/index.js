@@ -2,15 +2,16 @@ const router = require('express').Router();
 const userRouter = require('./users');
 const cardRouter = require('./cards');
 const NotFound = require('../errors/NotFound');
+const { auth } = require('../middlewares/auth');
 
-router.get('/', (req, res) => {
+/*router.get('/', (req, res) => {
   res.send('Главная страница');
-});
+});*/
 
 router.use('/', userRouter);
 router.use('/cards', cardRouter);
 
-router.all('*', () => {
+router.all('*', auth, () => {
   throw new NotFound('Ресурс не найден или был удален');
 });
 
