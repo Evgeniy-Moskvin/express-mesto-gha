@@ -104,6 +104,8 @@ const updateUserAvatar = ((req, res, next) => {
 });
 
 const login = ((req, res, next) => {
+  console.log('login');
+
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
