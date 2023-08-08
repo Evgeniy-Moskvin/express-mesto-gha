@@ -13,7 +13,7 @@ const getCards = ((req, res, next) => {
 });
 
 const createCard = ((req, res, next) => {
-  Card.create({ ...req.body, owner: req.user._id })
+  Card.create({ ...req.body, owner: res.user._id })
     .then((card) => {
       res.status(STATUS_CODE_CREATED).send(card);
     })
@@ -50,7 +50,7 @@ const deleteCard = ((req, res, next) => {
 });
 
 const addLike = ((req, res, next) => {
-  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: res.user._id } }, { new: true })
     .then((card) => {
       if (!card) {
         throw new NotFound(`Карточка с id ${req.params.cardId} не найдена`);
@@ -67,7 +67,7 @@ const addLike = ((req, res, next) => {
 });
 
 const deleteLike = ((req, res, next) => {
-  Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+  Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: res.user._id } }, { new: true })
     .then((card) => {
       if (!card) {
         throw new NotFound(`Карточка с id ${req.params.cardId} не найдена`);
