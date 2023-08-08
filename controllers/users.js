@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const NotFound = require('../errors/NotFound');
 const BadRequest = require('../errors/BadRequest');
+const Conflict = require('../errors/Conflict')
 const { createToken } = require('../utils/jwt');
 const { STATUS_CODE_OK, STATUS_CODE_CREATED } = require('../utils/httpStatusCodes');
 
@@ -50,8 +51,12 @@ const createUser = ((req, res, next) => {
           });
         })
         .catch((err) => {
+          if (err.code === 11000) {
+            next(new Conflict(`Пользователь с email ${req.body.email} уже зарегистрирован!`));
+            return;
+          }
           if (err.name === 'ValidationError') {
-            next(new BadRequest('Некорректные данные'));
+            next(new BadRequest('Некорректные данные!'));
             return;
           }
           next(err);
