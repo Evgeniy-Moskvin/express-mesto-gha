@@ -8,8 +8,6 @@ const { createToken } = require('../utils/jwt');
 const { STATUS_CODE_OK, STATUS_CODE_CREATED } = require('../utils/httpStatusCodes');
 
 const getUsers = ((req, res, next) => {
-  console.log('getUsers');
-
   User.find({})
     .then((users) => {
       res.status(STATUS_CODE_OK).send(users);
@@ -121,16 +119,16 @@ const login = ((req, res, next) => {
 });
 
 const getUser = ((req, res, next) => {
-  User.findById(req.user._id)
+  console.log('getUser');
+
+  User.findById(res.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFound(`Пользователь с id ${req.user._id} не найден`);
+        throw new NotFound(`Пользователь с id ${res.user._id} не найден`);
       }
       res.status(STATUS_CODE_OK).send({ user });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 });
 
 module.exports = {

@@ -14,6 +14,8 @@ const {
 
 router.get('/users', auth, getUsers);
 
+router.get('/users/me', auth, getUser);
+
 router.get('/users/:userId', auth, celebrate({
   params: Joi.object().keys({
     userId: Joi.string().required().min(24).max(24)
@@ -50,7 +52,5 @@ router.post('/signin', celebrate({
     password: Joi.string().required(),
   }),
 }), login);
-
-router.get('/users/me', auth, getUser);
 
 module.exports = router;
