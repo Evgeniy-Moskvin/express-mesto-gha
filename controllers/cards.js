@@ -32,13 +32,13 @@ const deleteCard = ((req, res, next) => {
       if (!card) {
         throw new NotFound(`Карточка с id ${req.params.cardId} не найдена`);
       }
-    })
-    .then((card) => {
-      if (!req.user._id === req.params.cardId) {
+
+      if (!res.user._id === req.params.cardId) {
         next(new Forbidden('Нет прав для удаления карточки'));
         return;
       }
-      res.status(STATUS_CODE_OK).send(card);
+
+      return res.status(STATUS_CODE_OK).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
