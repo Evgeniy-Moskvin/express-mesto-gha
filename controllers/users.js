@@ -115,6 +115,19 @@ const login = ((req, res, next) => {
     });
 });
 
+const getUser = ((req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFound(`Пользователь с id ${req.user._id} не найден`);
+      }
+      res.status(STATUS_CODE_OK).send({ user });
+    })
+    .catch((err) => {
+      next(err);
+    })
+});
+
 module.exports = {
   getUsers,
   getUserById,
@@ -122,4 +135,5 @@ module.exports = {
   updateUser,
   updateUserAvatar,
   login,
+  getUser,
 };
