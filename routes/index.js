@@ -4,10 +4,6 @@ const cardRouter = require('./cards');
 const NotFound = require('../errors/NotFound');
 const { auth } = require('../middlewares/auth');
 
-/*router.get('/', (req, res) => {
-  res.send('Главная страница');
-});*/
-
 router.use('/', userRouter);
 router.use('/cards', cardRouter);
 

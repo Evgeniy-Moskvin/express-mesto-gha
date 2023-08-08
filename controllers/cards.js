@@ -36,7 +36,7 @@ const deleteCard = ((req, res, next) => {
         next(new Forbidden('Нет прав для удаления карточки'));
         return;
       }
-      return res.status(STATUS_CODE_OK).send(card);
+      res.status(STATUS_CODE_OK).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
