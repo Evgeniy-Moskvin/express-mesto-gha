@@ -51,7 +51,11 @@ const createUser = ((req, res, next) => {
           });
         })
         .catch((err) => {
-          if (err.code === 11000) {
+          /*if (err.code === 11000) {
+            next(new Conflict(`Пользователь с email ${req.body.email} уже зарегистрирован!`));
+            return;
+          }*/
+          if (err.errors.email.kind === 'unique') {
             next(new Conflict(`Пользователь с email ${req.body.email} уже зарегистрирован!`));
             return;
           }
