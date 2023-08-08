@@ -4,7 +4,7 @@ const UnAuthorized = require('../errors/UnAuthorized');
 const auth = (req, res, next) => {
   const token = res.cookie.jwt;
 
-  let payload
+  let payload;
 
   if (!token) {
     next(new UnAuthorized('Необходима авторизация'));
