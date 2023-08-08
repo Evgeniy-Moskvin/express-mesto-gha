@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 const BadRequest = require('../errors/BadRequest');
 const NotFound = require('../errors/NotFound');
+const Forbidden = require('../errors/Forbidden');
 const { STATUS_CODE_OK, STATUS_CODE_CREATED } = require('../utils/httpStatusCodes');
 
 const getCards = ((req, res, next) => {
@@ -30,6 +31,12 @@ const deleteCard = ((req, res, next) => {
     .then((card) => {
       if (!card) {
         throw new NotFound(`Карточка с id ${req.params.cardId} не найдена`);
+      }
+    })
+    .then((card) => {
+      if (!req.user._id === req.params.cardId) {
+        next(new Forbidden('Нет прав для удаления карточки'));
+        return;
       }
       res.status(STATUS_CODE_OK).send(card);
     })
