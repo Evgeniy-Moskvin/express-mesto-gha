@@ -4,8 +4,6 @@ const UnAuthorized = require('../errors/UnAuthorized');
 const auth = (req, res, next) => {
   const token = req.cookies.jwt;
 
-  console.log('token', token);
-
   let payload;
 
   if (!token) {

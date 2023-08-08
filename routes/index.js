@@ -11,7 +11,6 @@ router.use('/', userRouter);
 router.use('/cards', cardRouter);
 
 router.all('*', () => {
-  console.log('router 404');
   throw new NotFound('Ресурс не найден или был удален');
 });
 
