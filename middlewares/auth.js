@@ -7,14 +7,14 @@ const auth = (req, res, next) => {
   let payload;
 
   if (!token) {
-    next(new UnAuthorized('Необходима авторизация'));
+    next(new UnAuthorized('Необходима авторизация!'));
     return;
   }
 
   try {
     payload = jwt.verify(token, 'some-secret-key');
   } catch (err) {
-    next(new UnAuthorized('Необходима авторизация'));
+    next(new UnAuthorized('Необходима авторизация!'));
     return;
   }
 
